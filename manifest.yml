@@ -1,0 +1,11 @@
+applications:
+- services:
+  - mongodb-uo
+  host: followers
+  disk: 1024M
+  name: followers
+  command: node app.js
+  path: .
+  domain: ng.bluemix.net
+  mem: 128M
+  instances: 1
