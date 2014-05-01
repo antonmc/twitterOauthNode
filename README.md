@@ -1,7 +1,7 @@
 twitterOauthNode
 ================
 
-A working, deployable Node.js, express, oauth example using Twitters API
+A working, ready to run Node.js, express, oauth example using Twitters API
 
 **Download / install Node.js:**
 
