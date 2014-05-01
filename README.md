@@ -3,32 +3,34 @@ twitterOauthNode
 
 A working, deployable Node.js, express, oauth example using Twitters API
 
-    Install Node.js:
+    **Download / install Node.js:**
 
-        curl -0 http://nodejs.org/dist/v0.6.11/node-v0.6.11.tar.gz
-        tar -zxf node-v0.6.11.tar.gz
-        cd node-v0.6.11
-        ./configure
-        make
-        make install
+		http://nodejs.org/download/
 
-    Clone this repo:
+    **Clone this repo:**
 
         git clone git@github.com:antonmc/twitterOauthNode.git
 
-    Install Dependencies ( from package ):
+    **Install Dependencies ( from package ):**
+
+		cd into your cloned folder
 
         npm install
 
-    Edit server.js with your Twitter credentials:
+    **Edit server.js with your Twitter credentials:**
 
-        https://dev.twitter.com/apps
+		You can find out more about Twitter authentication here ...
 
-    Start Server:
+        https://dev.twitter.com/docs/auth
 
-        node server.js
+    **Start Server:**
 
-    Navigate to the page:
+        node server
+
+    **Navigate to the page:**
+
+		It should lead you through Twitter authentication
 
         Local host: http://127.0.0.1:8080
+        
         Remote host: http://yourserver.com:8080
