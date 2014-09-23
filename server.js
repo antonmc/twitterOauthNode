@@ -17,14 +17,14 @@ var _twitterConsumerKey = "YOUR TWITTER CONSUMER KEY";
 var _twitterConsumerSecret = " YOUR TWITTER CONSUMER SECRET";
 
 var consumer = new oauth.OAuth(
-    "https://twitter.com/oauth/request_token", "https://twitter.com/oauth/access_token",
+    "https://twitter.com/oauth/request_token", 
+    "https://twitter.com/oauth/access_token",
     _twitterConsumerKey, _twitterConsumerSecret, "1.0A", "http://127.0.0.1:8080/sessions/callback", "HMAC-SHA1");
 
-    app.use(errorHandler({ dumpExceptions: true, showStack: true }));
-    app.use(logger());
-    app.use(cookieParser());
-    app.use(session({ secret: "very secret" }));
-
+app.use(errorHandler({ dumpExceptions: true, showStack: true }));
+app.use(logger());
+app.use(cookieParser());
+app.use(session({ secret: "very secret" }));
 
 app.use(function(req, res, next){
   var err = req.session.error,
@@ -38,9 +38,11 @@ app.use(function(req, res, next){
 });
 
 app.get('/sessions/connect', function(req, res){
-  consumer.getOAuthRequestToken(function(error, oauthToken, oauthTokenSecret, results){
-    if (error) {
-      res.send("Error getting OAuth request token : " + util.inspect(error), 500);
+  consumer.getOAuthRequestToken(
+      function(error, oauthToken, oauthTokenSecret, results){
+        if (error) {
+            res.send("Error getting OAuth request token : " + 
+                     util.inspect(error), 500);
     } else {
       req.session.oauthRequestToken = oauthToken;
       req.session.oauthRequestTokenSecret = oauthTokenSecret;
@@ -54,37 +56,36 @@ app.get('/sessions/callback', function(req, res){
   util.puts(">>"+req.session.oauthRequestToken);
   util.puts(">>"+req.session.oauthRequestTokenSecret);
   util.puts(">>"+req.query.oauth_verifier);
-  consumer.getOAuthAccessToken(req.session.oauthRequestToken, req.session.oauthRequestTokenSecret, req.query.oauth_verifier, function(error, oauthAccessToken, oauthAccessTokenSecret, results) {
+  consumer.getOAuthAccessToken( req.session.oauthRequestToken, req.session.oauthRequestTokenSecret, req.query.oauth_verifier, 
+    function(error, oauthAccessToken, oauthAccessTokenSecret, results) {
     if (error) {
-      res.send("Error getting OAuth access token : " + util.inspect(error) + "["+oauthAccessToken+"]"+ "["+oauthAccessTokenSecret+"]"+ "["+util.inspect(results)+"]", 500);
+    res.send("Error getting OAuth access token : " + util.inspect(error) 
+            + "["+oauthAccessToken+"]"+ "[" +oauthAccessTokenSecret 
+            + "]" + "[" + util.inspect(results)+"]", 500);
     } else {
       req.session.oauthAccessToken = oauthAccessToken;
       req.session.oauthAccessTokenSecret = oauthAccessTokenSecret;
 
       console.log( 'get sessions callback' );
-
-
       res.redirect('/home');
     }
   });
 });
 
-app.get('/home', function(req, res){
-    consumer.get("https://api.twitter.com/1.1/account/verify_credentials.json", req.session.oauthAccessToken, req.session.oauthAccessTokenSecret, function (error, data, response) {
-      if (error) {
+var tAPI = "https://api.twitter.com/1.1/account/verify_credentials.json";
 
+app.get('/home', function(req, res){
+    consumer.get( tAPI, req.session.oauthAccessToken, 
+                 req.session.oauthAccessTokenSecret, 
+                 function (error, data, response) {
+      if (error) {
           console.log( 'error\n' );
           console.log( error );
-
           res.redirect('/sessions/connect');
-          // res.send("Error getting twitter screen name : " + util.inspect(error), 500);
       } else {
           var parsedData = JSON.parse(data);
-
           console.log( parsedData );
-
-        // req.session.twitterScreenName = response.screen_name;
-        res.send('You are signed in: ' + parsedData.screen_name);
+          res.send('You are signed in: ' + parsedData.screen_name);
       }
     });
 });
